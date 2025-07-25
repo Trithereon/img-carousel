@@ -1,5 +1,6 @@
 import "./styles.css";
-import "modern-normalize/modern-normalize.css";
-import EventHandler from "./events.js";
+import ImgCarousel from "./img-carousel";
 
-EventHandler.init();
+document.querySelectorAll(".img-carousel").forEach((carouselContainer) => {
+  new ImgCarousel(carouselContainer);
+});
