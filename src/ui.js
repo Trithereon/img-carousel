@@ -27,6 +27,7 @@ export default class UI {
     });
     // Display selected slide.
     slideArray[index].classList.add("visible");
+    // Darken corresponding nav dot.
     UI._darkenDot(carouselContainer, index);
   }
 

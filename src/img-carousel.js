@@ -18,6 +18,7 @@ export default class ImgCarousel {
     UI.populateDots(this.carouselContainer, this.slideArr);
     UI.identifySlides(this.slideArr);
     UI.displaySlide(this.carouselContainer, this.slideArr, 0);
+    setTimeout(this.handleNext, 5000);
   };
   handleClick = (e) => {
     const action = e.target.dataset.action;
@@ -47,6 +48,7 @@ export default class ImgCarousel {
     } else {
       UI.displaySlide(this.carouselContainer, this.slideArr, 0);
     }
+    setTimeout(this.handleNext, 5000);
   };
   handleNavDot = (e) => {
     const index = e.target.dataset.index;
