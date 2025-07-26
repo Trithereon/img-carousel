@@ -1,28 +1,55 @@
 // Event handling module.
 
+import UI from "./ui";
+
 export default class ImgCarousel {
   constructor(carouselContainer) {
     this.carouselContainer = carouselContainer;
-    this.init();
     this.actionHandlers = {
       prev: this.handlePrev,
       next: this.handleNext,
+      navDot: this.handleNavDot,
     };
+    this.slideArr = this.carouselContainer.querySelectorAll(".slide");
+    this.init();
   }
   init = () => {
     document.addEventListener("click", this.handleClick);
+    UI.populateDots(this.carouselContainer, this.slideArr);
+    UI.identifySlides(this.slideArr);
+    UI.displaySlide(this.carouselContainer, this.slideArr, 0);
   };
   handleClick = (e) => {
     const action = e.target.dataset.action;
-    // Execute the associated function, passing the e onto the next function.
-    if (action) this.actionHandlers[action](e);
-    // If the clicked element has no data-action, then ignore the click.
-    else return;
+    if (action)
+      this.actionHandlers[action](e); // Execute the associated function, passing the e onto the next function.
+    else return; // If the clicked element has no data-action, then ignore the click.
   };
-  handlePrev = (e) => {
-    console.log("User Clicked Previous button");
+  handlePrev = () => {
+    const currentIndex = parseInt(
+      this.carouselContainer.querySelector(".visible").dataset.index,
+    );
+    if (currentIndex > 0) {
+      const nextIndex = currentIndex - 1;
+      UI.displaySlide(this.carouselContainer, this.slideArr, nextIndex);
+    } else {
+      const nextIndex = this.slideArr.length - 1;
+      UI.displaySlide(this.carouselContainer, this.slideArr, nextIndex);
+    }
   };
-  handleNext = (e) => {
-    console.log("User Clicked Next button");
+  handleNext = () => {
+    const currentIndex = parseInt(
+      this.carouselContainer.querySelector(".visible").dataset.index,
+    );
+    if (currentIndex < this.slideArr.length - 1) {
+      const nextIndex = currentIndex + 1;
+      UI.displaySlide(this.carouselContainer, this.slideArr, nextIndex);
+    } else {
+      UI.displaySlide(this.carouselContainer, this.slideArr, 0);
+    }
+  };
+  handleNavDot = (e) => {
+    const index = e.target.dataset.index;
+    UI.displaySlide(this.carouselContainer, this.slideArr, index);
   };
 }
