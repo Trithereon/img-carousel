@@ -11,6 +11,7 @@ export default class ImgCarousel {
       navDot: this.handleNavDot,
     };
     this.slideArr = this.carouselContainer.querySelectorAll(".slide");
+    this.timeoutId = null; // To track the timeout
     this.init();
   }
   init = () => {
@@ -18,12 +19,14 @@ export default class ImgCarousel {
     UI.populateDots(this.carouselContainer, this.slideArr);
     UI.identifySlides(this.slideArr);
     UI.displaySlide(this.carouselContainer, this.slideArr, 0);
-    setTimeout(this.handleNext, 5000);
+    this.startAutoPlay();
   };
   handleClick = (e) => {
     const action = e.target.dataset.action;
-    if (action)
-      this.actionHandlers[action](e); // Execute the associated function, passing the e onto the next function.
+    if (action) {
+      this.stopAutoPlay();
+      this.actionHandlers[action](e);
+    } // Execute the associated function, passing the e onto the next function.
     else return; // If the clicked element has no data-action, then ignore the click.
   };
   handlePrev = () => {
@@ -48,10 +51,22 @@ export default class ImgCarousel {
     } else {
       UI.displaySlide(this.carouselContainer, this.slideArr, 0);
     }
-    setTimeout(this.handleNext, 5000);
   };
   handleNavDot = (e) => {
     const index = e.target.dataset.index;
     UI.displaySlide(this.carouselContainer, this.slideArr, index);
+  };
+  startAutoPlay = () => {
+    this.stopAutoPlay();
+    this.timeoutId = setTimeout(() => {
+      this.handleNext();
+      this.startAutoPlay();
+    }, 5000);
+  };
+  stopAutoPlay = () => {
+    if (this.timeoutId) {
+      clearTimeout(this.timeoutId);
+      this.timeoutId = null;
+    }
   };
 }
